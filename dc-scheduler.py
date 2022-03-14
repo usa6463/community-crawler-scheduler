@@ -1,24 +1,26 @@
+from datetime import datetime
+
 from airflow.decorators import dag
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
-from datetime import datetime
-from airflow.utils.dates import days_ago
 
 default_args = {
     'owner': 'airflow',
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 3, 16))
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 3, 12))
 def dc_scrapping():
     k = KubernetesPodOperator(
-        name="scrap-dc-stock",
-        image="debian",
-        cmds=["bash", "-cx"],
-        arguments=["echo", "10"],
-        labels={"foo": "bar"},
-        task_id="dry_run_demo",
+        name="scrap-dc-stock",  # pod name
+        image="usa6463/community-crawler:1.0.0",
+        arguments=["--target_date", "2022-03-14",
+                   "--last_content_num", "2430644",
+                   "--elasticsearch_hostname", "elasticsearch-master.default.svc.cluster.local",
+                   "--elasticsearch_port", "9200",
+                   "--elasticsearch_index_name", "dc-content-test"],
+        task_id="scrap-dc-stock",
         do_xcom_push=True,
     )
 
