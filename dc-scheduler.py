@@ -17,7 +17,7 @@ def dc_scrapping():
         namespace="default",
         image="usa6463/community-crawler:1.0.0",
         arguments=["--target_date", "{{ next_ds }}",
-                   "--last_content_num", "2430644",
+                   "--last_content_num", "2430001",
                    "--elasticsearch_hostname", "elasticsearch-master.default.svc.cluster.local",
                    "--elasticsearch_port", "9200",
                    "--elasticsearch_index_name", "dc-content-test"],
