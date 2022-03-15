@@ -14,6 +14,7 @@ default_args = {
 def dc_scrapping():
     k = KubernetesPodOperator(
         name="scrap-dc-stock",  # pod name
+        namespace="default",
         image="usa6463/community-crawler:1.0.0",
         arguments=["--target_date", "2022-03-14",
                    "--last_content_num", "2430644",
