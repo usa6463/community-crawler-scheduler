@@ -15,7 +15,7 @@ def dc_scrapping():
     k = KubernetesPodOperator(
         name="scrap-dc-stock",  # pod name
         namespace="default",
-        image="usa6463/community-crawler:1.0.0",
+        image="usa6463/community-crawler:1.0.1",
         arguments=["--target_date", "{{ next_ds }}",
                    "--last_content_num", "2430001",
                    "--elasticsearch_hostname", "elasticsearch-master.default.svc.cluster.local",
