@@ -19,7 +19,7 @@ def dc_scrapping():
         env_vars=[
             V1EnvVar(name="ES_HOST", value="elasticsearch-master.default.svc.cluster.local"),
             V1EnvVar(name="ES_PORT", value="9200"),
-            V1EnvVar(name="TARGET_DATE", value="{{ ds }}"),
+            V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="LOGGING_LEVEL", value="info"),
             V1EnvVar(name="BOARD_BASE_URL", value="https://gall.dcinside.com/board/lists/?id=rlike"),
             V1EnvVar(name="ES_INDEX_NAME", value="dc-content-loglike"),
