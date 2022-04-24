@@ -11,25 +11,25 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 4, 20), max_active_runs=1)
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 4, 23), max_active_runs=1)
 def dc_scrapping():
-    k = KubernetesPodOperator(
-        name="scrap-dc-stock",  # pod name
+    man_fashion_gall = KubernetesPodOperator(
+        name="scrap-dc-man-fashion",  # pod name
         namespace="default",
         env_vars=[
             V1EnvVar(name="ES_HOST", value="elasticsearch-master.default.svc.cluster.local"),
             V1EnvVar(name="ES_PORT", value="9200"),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="LOGGING_LEVEL", value="info"),
-            V1EnvVar(name="BOARD_BASE_URL", value="https://gall.dcinside.com/board/lists/?id=rlike"),
-            V1EnvVar(name="ES_INDEX_NAME", value="dc-content-loglike"),
+            V1EnvVar(name="BOARD_BASE_URL", value="https://gall.dcinside.com/mgallery/board/lists?id=mf"),
+            V1EnvVar(name="ES_INDEX_NAME", value="dc-content-mgallery-man-fashion"),
             V1EnvVar(name="WEB_DRIVER_PATH", value="/chromedriver"),
         ],
         image="usa6463/community-crawler:2.0.0",
-        task_id="scrap-dc-stock",
+        task_id="scrap-dc-man-fashion",
     )
 
-    k.dry_run()
+    man_fashion_gall.dry_run()
 
 
 dag = dc_scrapping()
