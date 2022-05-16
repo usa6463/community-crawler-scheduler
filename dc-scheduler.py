@@ -25,8 +25,9 @@ def dc_scrapping():
             V1EnvVar(name="ES_INDEX_NAME", value="dc-content-mgallery-man-fashion"),
             V1EnvVar(name="WEB_DRIVER_PATH", value="/chromedriver"),
         ],
-        image="usa6463/community-crawler:2.2.1",
+        image="usa6463/community-crawler:2.2.2",
         task_id="scrap-dc-man-fashion",
+        retries=1
     )
 
     man_fashion_gall.dry_run()
