@@ -11,13 +11,13 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 4, 1), max_active_runs=1)
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 11, 23), max_active_runs=1)
 def dc_scrapping():
     man_fashion_gall = KubernetesPodOperator(
         name="scrap-dc-man-fashion",  # pod name
         namespace="default",
         env_vars=[
-            V1EnvVar(name="ES_HOST", value="elasticsearch-master.default.svc.cluster.local"),
+            V1EnvVar(name="ES_HOST", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
             V1EnvVar(name="ES_PORT", value="9200"),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="LOGGING_LEVEL", value="info"),
