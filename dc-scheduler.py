@@ -15,7 +15,7 @@ default_args = {
 def dc_scrapping():
     man_fashion_gall = KubernetesPodOperator(
         name="scrap-dc-man-fashion",  # pod name
-        namespace="default",
+        namespace="airflow",
         env_vars=[
             V1EnvVar(name="ES_HOST", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
             V1EnvVar(name="ES_PORT", value="9200"),
