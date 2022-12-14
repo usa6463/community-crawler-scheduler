@@ -5,6 +5,7 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
 from kubernetes.client import V1EnvVar
+from kubernetes.client import models as k8s_models
 
 default_args = {
     'owner': 'airflow',
@@ -27,6 +28,9 @@ def dc_scrapping():
         ],
         image="usa6463/community-crawler:2.2.5",
         task_id="scrap-dc-man-fashion",
+        container_resources=k8s_models.V1ResourceRequirements(
+            limits={"memory": "2G", "cpu": "2000m"},
+        ),
         retries=1
     )
 
