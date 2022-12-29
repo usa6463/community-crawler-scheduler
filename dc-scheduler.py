@@ -30,7 +30,7 @@ def dc_scrapping():
         image="usa6463/community-crawler:2.2.15",
         task_id="scrap-dc-man-fashion",
         container_resources=k8s_models.V1ResourceRequirements(
-            limits={"memory": "1G", "cpu": "1000m"},
+            limits={"memory": "700m", "cpu": "500m"},
         ),
         retries=1
     )
