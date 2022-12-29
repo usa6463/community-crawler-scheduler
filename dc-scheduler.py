@@ -12,7 +12,7 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 11, 23), max_active_runs=1)
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2022, 12, 1), max_active_runs=1)
 def dc_scrapping():
     man_fashion_gall = KubernetesPodOperator(
         name="scrap-dc-man-fashion",  # pod name
