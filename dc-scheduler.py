@@ -6,12 +6,41 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
 )
 from kubernetes.client import V1EnvVar
 from kubernetes.client import models as k8s_models
-import slack_alerter
+from slack_sdk import WebClient
+from airflow.models import Variable
+
+
+def success_msg(context):
+    channel, client = _get_slack_info()
+
+    text = f'''
+    {context.get('task_instance').dag_id} {context.get('task_instance').task_id} success
+    date: {context.get('execution_time')}
+    '''
+    client.chat_postMessage(channel=channel, text=text)
+
+
+def failure_msg(context):
+    channel, client = _get_slack_info()
+
+    text = f'''
+    {context.get('task_instance').dag_id} {context.get('task_instance').task_id} fail
+    date: {context.get('execution_time')}
+    exception: {context.get('exception')} 
+    '''
+    client.chat_postMessage(channel=channel, text=text)
+
+
+def _get_slack_info():
+    channel = Variable.get("channel")
+    client = WebClient(token=Variable.get("slack_app_token"))
+    return channel, client
+
 
 default_args = {
     'owner': 'airflow',
-    'on_success_callback': slack_alerter.success_msg,
-    'on_failure_callback': slack_alerter.failure_msg,
+    'on_success_callback': success_msg,
+    'on_failure_callback': failure_msg,
 }
 
 
@@ -39,6 +68,5 @@ def dc_scrapping():
     )
 
     man_fashion_gall.dry_run()
-
 
 dag = dc_scrapping()
