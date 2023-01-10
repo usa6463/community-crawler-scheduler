@@ -40,7 +40,7 @@ default_args = {
 @dag(default_args=default_args, schedule_interval=None, start_date=None, max_active_runs=1)
 def test_dag():
     test_bash = BashOperator(
-        name="test-bash",  # pod name
+        task_id="test-bash",
         bash_command="echo hello"
     )
 
