@@ -2,6 +2,7 @@ from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
 from slack_sdk import WebClient
 from airflow.models import Variable
+from datetime import datetime
 
 def success_msg(context):
     channel, client = _get_slack_info()
