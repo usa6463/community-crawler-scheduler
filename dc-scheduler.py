@@ -6,7 +6,7 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
 )
 from kubernetes.client import V1EnvVar
 from kubernetes.client import models as k8s_models
-from slack_alerter import slack_alerter
+import slack_alerter
 
 default_args = {
     'owner': 'airflow',
