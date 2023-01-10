@@ -37,7 +37,7 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval=None, start_date=None, max_active_runs=1)
+@dag(default_args=default_args, schedule_interval=None, start_date=datetime(2023, 1, 2), max_active_runs=1)
 def test_dag():
     test_bash = BashOperator(
         task_id="test-bash",
