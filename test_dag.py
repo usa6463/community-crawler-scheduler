@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
 import slack_alerter
