@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from airflow.decorators import dag
+from airflow.models import Variable
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
 from kubernetes.client import V1EnvVar
 from kubernetes.client import models as k8s_models
 from slack_sdk import WebClient
-from airflow.models import Variable
 
 
 def success_msg(context):
@@ -67,6 +67,26 @@ def dc_scrapping():
         retries=1
     )
 
-    man_fashion_gall.dry_run()
+    tag_morpheme = KubernetesPodOperator(
+        name="tag_morpheme",  # pod name
+        namespace="airflow",
+        env_vars=[
+            V1EnvVar(name="ES_URL", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
+            V1EnvVar(name="PGSQL_URL",
+                     value="postgresql://postgres:1jCBnXQFs0@postgresql.postgresql.svc.cluster.local/community_info_provider"),
+            V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
+            V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
+            V1EnvVar(name="TARGET_INDEX", value="dc-content-mgallery-man-fashion"),
+        ],
+        image="usa6463/community-crawler-nlp:0.0.4",
+        task_id="tag_morpheme",
+        container_resources=k8s_models.V1ResourceRequirements(
+            limits={"memory": "2G", "cpu": "2000m"},
+        ),
+        retries=1
+    )
+
+    man_fashion_gall >> tag_morpheme
+
 
 dag = dc_scrapping()
