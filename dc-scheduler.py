@@ -78,7 +78,7 @@ def dc_scrapping():
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
             V1EnvVar(name="TARGET_INDEX", value="dc-content-mgallery-man-fashion"),
         ],
-        image="usa6463/community-crawler-nlp:0.0.4",
+        image="usa6463/community-crawler-nlp:0.0.6",
         task_id="tag_morpheme",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
@@ -86,7 +86,25 @@ def dc_scrapping():
         retries=1
     )
 
-    man_fashion_gall >> tag_morpheme
+    monthly_statistics = KubernetesPodOperator(
+        name="monthly_statistics",  # pod name
+        namespace="airflow",
+        env_vars=[
+            V1EnvVar(name="PGSQL_URL",
+                     value="postgresql://postgres:1jCBnXQFs0@postgresql.postgresql.svc.cluster.local/community_info_provider"),
+            V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
+            V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
+        ],
+        image="usa6463/community-crawler-nlp:0.0.6",
+        task_id="monthly_statistics",
+        container_resources=k8s_models.V1ResourceRequirements(
+            limits={"memory": "2G", "cpu": "2000m"},
+        ),
+        cmds=["pipenv", "run", "run_monthly_statistics"],
+        retries=1
+    )
+
+    man_fashion_gall >> tag_morpheme >> monthly_statistics
 
 
 dag = dc_scrapping()
