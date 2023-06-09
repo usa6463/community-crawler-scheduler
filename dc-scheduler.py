@@ -9,6 +9,8 @@ from kubernetes.client import V1EnvVar
 from kubernetes.client import models as k8s_models
 from slack_sdk import WebClient
 
+PGSQL_URL = "postgresql://{{ conn.my_pg.login }}:{{ conn.my_pg.password }}@{{ conn.my_pg.host }}/{{ conn.my_pg.schema }}"
+
 
 def success_msg(context):
     channel, client = _get_slack_info()
@@ -73,7 +75,7 @@ def dc_scrapping():
         env_vars=[
             V1EnvVar(name="ES_URL", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
             V1EnvVar(name="PGSQL_URL",
-                     value="postgresql://postgres:1jCBnXQFs0@postgresql.postgresql.svc.cluster.local/community_info_provider"),
+                     value=PGSQL_URL),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
             V1EnvVar(name="TARGET_INDEX", value="dc-content-mgallery-man-fashion"),
@@ -91,7 +93,7 @@ def dc_scrapping():
         namespace="airflow",
         env_vars=[
             V1EnvVar(name="PGSQL_URL",
-                     value="postgresql://postgres:1jCBnXQFs0@postgresql.postgresql.svc.cluster.local/community_info_provider"),
+                     value=PGSQL_URL),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
         ],
