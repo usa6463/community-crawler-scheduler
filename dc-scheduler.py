@@ -9,6 +9,7 @@ from kubernetes.client import V1EnvVar
 from kubernetes.client import models as k8s_models
 from slack_sdk import WebClient
 
+ES_URL = "elasticsearch-master.default.svc.cluster.local"
 PGSQL_URL = "postgresql://{{ conn.my_pg.login }}:{{ conn.my_pg.password }}@{{ conn.my_pg.host }}/{{ conn.my_pg.schema }}"
 
 
@@ -46,13 +47,13 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2023, 1, 2), max_active_runs=1)
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2023, 6, 19), max_active_runs=1)
 def dc_scrapping():
     man_fashion_gall = KubernetesPodOperator(
         name="scrap-dc-man-fashion",  # pod name
         namespace="airflow",
         env_vars=[
-            V1EnvVar(name="ES_HOST", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
+            V1EnvVar(name="ES_HOST", value=ES_URL),
             V1EnvVar(name="ES_PORT", value="9200"),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="LOGGING_LEVEL", value="info"),
@@ -73,7 +74,7 @@ def dc_scrapping():
         name="tag_morpheme",  # pod name
         namespace="airflow",
         env_vars=[
-            V1EnvVar(name="ES_URL", value="elasticsearch-master.elasticsearch.svc.cluster.local"),
+            V1EnvVar(name="ES_URL", value=ES_URL),
             V1EnvVar(name="PGSQL_URL",
                      value=PGSQL_URL),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
