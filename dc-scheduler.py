@@ -47,7 +47,7 @@ default_args = {
 }
 
 
-@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2023, 6, 19), max_active_runs=1)
+@dag(default_args=default_args, schedule_interval="@daily", start_date=datetime(2023, 6, 24), max_active_runs=1)
 def dc_scrapping():
     man_fashion_gall = KubernetesPodOperator(
         name="scrap-dc-man-fashion",  # pod name
@@ -62,7 +62,7 @@ def dc_scrapping():
             V1EnvVar(name="WEB_DRIVER_PATH", value="/chromedriver"),
             V1EnvVar(name="POLITENESS", value="1500"),
         ],
-        image="usa6463/community-crawler:2.2.16",
+        image="usa6463/community-crawler:2.2.17",
         task_id="scrap-dc-man-fashion",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
