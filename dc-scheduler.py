@@ -62,7 +62,7 @@ def dc_scrapping():
             V1EnvVar(name="WEB_DRIVER_PATH", value="/chromedriver"),
             V1EnvVar(name="POLITENESS", value="1500"),
         ],
-        image="usa6463/community-crawler:2.2.19",
+        image="usa6463/community-crawler:2.2.20",
         task_id="scrap-dc-man-fashion",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
