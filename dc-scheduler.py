@@ -56,7 +56,7 @@ def dc_scrapping():
             V1EnvVar(name="ES_HOST", value=ES_URL),
             V1EnvVar(name="ES_PORT", value="9200"),
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
-            V1EnvVar(name="LOGGING_LEVEL", value="debug"),
+            V1EnvVar(name="LOGGING_LEVEL", value="info"),
             V1EnvVar(name="BOARD_BASE_URL", value="http://gall.dcinside.com/mgallery/board/lists?id=mf"),
             V1EnvVar(name="ES_INDEX_NAME", value="dc-content-mgallery-man-fashion"),
             V1EnvVar(name="WEB_DRIVER_PATH", value="/chromedriver"),
