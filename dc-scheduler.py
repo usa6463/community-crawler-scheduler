@@ -11,6 +11,7 @@ from slack_sdk import WebClient
 
 ES_URL = "elasticsearch-master.elasticsearch.svc.cluster.local"
 PGSQL_URL = "postgresql://{{ conn.my_pg.login }}:{{ conn.my_pg.password }}@{{ conn.my_pg.host }}/{{ conn.my_pg.schema }}"
+COMMUNITY_CRAWLER_NLP_IMAGE = "usa6463/community-crawler-nlp:0.1.1"
 
 
 def success_msg(context):
@@ -81,8 +82,27 @@ def dc_scrapping():
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
             V1EnvVar(name="TARGET_INDEX", value="dc-content-mgallery-man-fashion"),
         ],
-        image="usa6463/community-crawler-nlp:0.0.6",
+        image=("%s" % COMMUNITY_CRAWLER_NLP_IMAGE),
         task_id="tag_morpheme",
+        container_resources=k8s_models.V1ResourceRequirements(
+            limits={"memory": "2G", "cpu": "2000m"},
+        ),
+        retries=1
+    )
+
+    extract_brand_from_static_name_pool = KubernetesPodOperator(
+        name="extract_brand_from_static_name_pool",  # pod name
+        namespace="airflow",
+        env_vars=[
+            V1EnvVar(name="ES_URL", value=ES_URL),
+            V1EnvVar(name="PGSQL_URL",
+                     value=PGSQL_URL),
+            V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
+            V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
+            V1EnvVar(name="TARGET_INDEX", value="dc-content-mgallery-man-fashion"),
+        ],
+        image=("%s" % COMMUNITY_CRAWLER_NLP_IMAGE),
+        task_id="extract_brand_from_static_name_pool",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
         ),
@@ -98,7 +118,7 @@ def dc_scrapping():
             V1EnvVar(name="TARGET_DATE", value="{{ prev_ds }}"),
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
         ],
-        image="usa6463/community-crawler-nlp:0.0.6",
+        image=COMMUNITY_CRAWLER_NLP_IMAGE,
         task_id="monthly_statistics",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
@@ -107,7 +127,7 @@ def dc_scrapping():
         retries=1
     )
 
-    man_fashion_gall >> tag_morpheme >> monthly_statistics
+    man_fashion_gall >> tag_morpheme >> extract_brand_from_static_name_pool >> monthly_statistics
 
 
 dag = dc_scrapping()
