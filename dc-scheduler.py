@@ -11,7 +11,7 @@ from slack_sdk import WebClient
 
 ES_URL = "elasticsearch-master.elasticsearch.svc.cluster.local"
 PGSQL_URL = "postgresql://{{ conn.my_pg.login }}:{{ conn.my_pg.password }}@{{ conn.my_pg.host }}/{{ conn.my_pg.schema }}"
-COMMUNITY_CRAWLER_NLP_IMAGE = "usa6463/community-crawler-nlp:0.1.1"
+COMMUNITY_CRAWLER_NLP_IMAGE = "usa6463/community-crawler-nlp:v0.1.1"
 
 
 def success_msg(context):
