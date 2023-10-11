@@ -11,7 +11,7 @@ from slack_sdk import WebClient
 
 ES_URL = "elasticsearch-master.elasticsearch.svc.cluster.local"
 PGSQL_URL = "postgresql://{{ conn.my_pg.login }}:{{ conn.my_pg.password }}@{{ conn.my_pg.host }}/{{ conn.my_pg.schema }}"
-COMMUNITY_CRAWLER_NLP_IMAGE = "usa6463/community-crawler-nlp:v0.1.1"
+COMMUNITY_CRAWLER_NLP_IMAGE = "usa6463/community-crawler-nlp:v0.1.2"
 
 
 def success_msg(context):
@@ -106,6 +106,7 @@ def dc_scrapping():
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
         ),
+        cmds=["pipenv", "run", "run_extract_brand_from_static_name_pool"],
         retries=1
     )
 
@@ -127,7 +128,8 @@ def dc_scrapping():
         retries=1
     )
 
-    man_fashion_gall >> tag_morpheme >> extract_brand_from_static_name_pool >> monthly_statistics
+    man_fashion_gall >> tag_morpheme >> monthly_statistics
+    man_fashion_gall >> extract_brand_from_static_name_pool
 
 
 dag = dc_scrapping()
