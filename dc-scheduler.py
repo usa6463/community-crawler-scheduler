@@ -138,7 +138,7 @@ def dc_scrapping():
             V1EnvVar(name="PYTHONUNBUFFERED", value="1"),
         ],
         image=("%s" % COMMUNITY_CRAWLER_NLP_IMAGE),
-        task_id="extract_brand_from_static_name_pool",
+        task_id="monthly_brand_from_static_name_pool",
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
         ),
