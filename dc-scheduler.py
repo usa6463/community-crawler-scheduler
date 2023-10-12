@@ -142,7 +142,7 @@ def dc_scrapping():
         container_resources=k8s_models.V1ResourceRequirements(
             limits={"memory": "2G", "cpu": "2000m"},
         ),
-        cmds=["pipenv", "run", "run_extract_brand_from_static_name_pool"],
+        cmds=["pipenv", "run", "monthly_brand_from_static_name_pool"],
         retries=1
     )
 
